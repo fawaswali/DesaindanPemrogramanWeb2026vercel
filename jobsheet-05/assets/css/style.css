@@ -240,15 +240,21 @@ footer {
         display: block;
     }
 
+    /* Menu saat tertutup: tinggi nol, disembunyikan, dan transparan */
     header nav {
-        display: none;
         width: 100%;
         order: 3;
-        margin-top: 1rem;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease-in-out, opacity 0.3s ease, margin-top 0.3s ease;
     }
 
+    /* Menu saat terbuka (saat tombol hamburger diklik) */
     header nav.nav-open {
-        display: block;
+        max-height: 250px; /* Ruang vertikal cukup untuk 4 link menu */
+        opacity: 1;
+        margin-top: 1rem;
     }
 
     header nav ul {

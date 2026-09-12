@@ -30,11 +30,16 @@ function initTableFilter() {
     if (!input || !table) return;
 
     input.addEventListener("keyup", function () {
-        const keyword = input.value.toLowerCase();
+        const keyword = input.value.toLowerCase().trim();
         const rows = table.querySelectorAll("tbody tr");
+
         rows.forEach(function (row) {
-            const teks = row.textContent.toLowerCase();
-            row.style.display = teks.includes(keyword) ? "" : "none";
+            // Mengambil elemen <td> pertama (kolom Judul)
+            const tdJudul = row.querySelector("td");
+            const teksJudul = tdJudul ? tdJudul.textContent.toLowerCase() : "";
+
+            // Cocokkan hanya dengan judul
+            row.style.display = teksJudul.includes(keyword) ? "" : "none";
         });
     });
 }
@@ -88,6 +93,20 @@ function initValidasiForm() {
                 hapusError(tahun);
             }
         }
+
+        const isbn = form.querySelector("[name='isbn']");
+        if (isbn) {
+            const nilaiISBN = isbn.value.trim();
+            const regexISBN = /^[0-9-]+$/;
+
+            if (nilaiISBN !== "" && !regexISBN.test(nilaiISBN)) {
+                tampilkanError(isbn, "ISBN hanya boleh berisi angka dan tanda hubung (-).");
+                valid = false;
+            } else {
+                hapusError(isbn);
+            }
+        }
+
 
         const stok = form.querySelector("[name='stok']");
         if (stok) {
