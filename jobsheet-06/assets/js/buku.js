@@ -23,6 +23,7 @@ async function muatDaftarBuku() {
                 "<td>" + buku.judul + "</td>" +
                 "<td>" + buku.pengarang + "</td>" +
                 "<td>" + buku.tahun + "</td>" +
+                "<td>" + (buku.kategori || "-") + "</td>" +
                 "<td>" + buku.stok + "</td>" +
                 "<td>" +
                 "<button type=\"button\">Edit</button> " +
@@ -38,4 +39,14 @@ async function muatDaftarBuku() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", muatDaftarBuku);
+document.addEventListener("DOMContentLoaded", function () {
+    muatDaftarBuku(); // Muat data pertama kali saat web dibuka
+
+    // Event listener tombol Muat Ulang
+    const btnReload = document.getElementById("btn-reload");
+    if (btnReload) {
+        btnReload.addEventListener("click", function () {
+            muatDaftarBuku();
+        });
+    }
+});
