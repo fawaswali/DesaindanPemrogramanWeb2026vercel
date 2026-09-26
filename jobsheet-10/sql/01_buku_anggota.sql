@@ -1,22 +1,21 @@
--- Jobsheet 8: skema awal database simpus_mini (PostgreSQL)
--- Jalankan setelah membuat database, misal:
---   createdb simpus_mini
---   psql -d simpus_mini -f sql/01_buku_anggota.sql
+-- Jobsheet 10: Skema Tabel Kamar & Penghuni Kost Papa (PostgreSQL)
 
-CREATE TABLE IF NOT EXISTS buku (
+CREATE TABLE IF NOT EXISTS kamar_10 (
     id SERIAL PRIMARY KEY,
-    judul VARCHAR(255) NOT NULL,
-    pengarang VARCHAR(255) NOT NULL,
-    tahun INTEGER NOT NULL,
-    isbn VARCHAR(50),
-    stok INTEGER NOT NULL DEFAULT 0,
-    kategori VARCHAR(50)
+    nomor_kamar VARCHAR(20) NOT NULL,
+    tipe_kamar VARCHAR(50) NOT NULL,
+    fasilitas TEXT,
+    harga_bulanan INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'Tersedia',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS anggota (
+CREATE TABLE IF NOT EXISTS penghuni_10 (
     id SERIAL PRIMARY KEY,
-    nama VARCHAR(255) NOT NULL,
-    no_anggota VARCHAR(50) NOT NULL UNIQUE,
-    alamat VARCHAR(255),
-    no_hp VARCHAR(30)
+    nik VARCHAR(20) NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    no_telepon VARCHAR(20),
+    pekerjaan VARCHAR(50),
+    tanggal_masuk DATE DEFAULT CURRENT_DATE,
+    kamar_id INT REFERENCES kamar_10(id) ON DELETE SET NULL
 );

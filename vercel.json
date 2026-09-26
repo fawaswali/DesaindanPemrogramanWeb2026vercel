@@ -20,11 +20,11 @@
       "dest": "/$1"
     },
     {
-      "src": "^/(jobsheet-.*\\.php.*)$",
+      "src": "^/(jobsheet-[^?]*\\.php.*)$",
       "dest": "/api/index.php"
     },
     {
-      "src": "^/(jobsheet-[^/.]+)$",
+      "src": "^/(jobsheet-[^?]*)$",
       "dest": "/api/index.php"
     },
     {

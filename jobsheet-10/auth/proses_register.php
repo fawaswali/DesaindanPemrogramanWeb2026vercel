@@ -25,7 +25,8 @@ if (!empty($errors)) {
     exit;
 }
 
-$cek = $pdo->prepare("SELECT id FROM users WHERE username = :username");
+// Cek duplikasi di users_10
+$cek = $pdo->prepare("SELECT id FROM users_10 WHERE username = :username");
 $cek->execute(['username' => $username]);
 if ($cek->fetch()) {
     $_SESSION['flash'] = ['type' => 'error', 'pesan' => 'Username sudah digunakan.'];
@@ -34,7 +35,7 @@ if ($cek->fetch()) {
 }
 
 $stmt = $pdo->prepare(
-    "INSERT INTO users (nama, username, password, role) VALUES (:nama, :username, :password, 'petugas')"
+    "INSERT INTO users_10 (nama, username, password, role) VALUES (:nama, :username, :password, 'petugas')"
 );
 $stmt->execute([
     'nama' => $nama,

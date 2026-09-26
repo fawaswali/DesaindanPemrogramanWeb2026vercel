@@ -1,74 +1,59 @@
-Wireframe & User Flow — SIMPUS-Mini
-Sub-CPMK: Merancang UI/UX aplikasi (proyek).
+# Wireframe & User Flow — Kost Papa
+Sub-CPMK: Merancang UI/UX aplikasi dan manajemen sesi autentikasi.
 
-Halaman yang sudah ada (Beranda, Daftar/Tambah Buku, Daftar/Tambah Anggota — Jobsheet 1-3) belum mencakup fitur Login, Dashboard Petugas, dan Peminjaman/Pengembalian. Dokumen ini merancang wireframe untuk halaman-halaman tersebut sebelum diimplementasikan mulai Jobsheet 5 dan seterusnya.
+Sistem Kost Papa menerapkan pembagian hak akses (role & guard clause) antara Tamu dan Petugas Pengelola Kost:
 
-Aktor
-Tamu: hanya bisa melihat katalog buku (Beranda, Daftar Buku) tanpa login.
-Petugas: login untuk mengakses seluruh fitur CRUD dan transaksi peminjaman.
-User Flow — Peminjaman Buku
-[Petugas Login] -> [Dashboard] -> [Pilih menu "Peminjaman Baru"]
-        -> [Pilih Anggota] -> [Pilih Buku (stok > 0)]
-        -> [Simpan] -> [Stok buku berkurang 1] -> [Kembali ke Dashboard]
-User Flow — Pengembalian Buku
-[Dashboard] -> [Menu "Pengembalian"] -> [Cari transaksi aktif (anggota/buku)]
-        -> [Tandai "Dikembalikan"] -> [Stok buku bertambah 1]
-        -> [Kembali ke Dashboard]
-Wireframe: Halaman Login
-+--------------------------------------+
-|              SIMPUS-Mini             |
-|--------------------------------------|
-|                                      |
-|        [ Login Petugas ]            |
-|                                      |
-|   Username : [______________]       |
-|   Password : [______________]       |
-|                                      |
-|          [   Masuk   ]              |
-|                                      |
-|   Belum punya akun? Daftar di sini  |
-+--------------------------------------+
-Wireframe: Dashboard Petugas
+## Pembagian Aktor
+* **Tamu (Publik):** Pengunjung umum yang dapat melihat Beranda dan Katalog Ketersediaan Kamar tanpa perlu login.
+* **Petugas:** Pengelola kost yang wajib login untuk mengakses seluruh fitur CRUD kamar, data penghuni, serta pendaftaran sewa.
+
+---
+
+## User Flow — Autentikasi & Pengelolaan Kost
+---
+
+## Wireframe: Halaman Login Petugas
+```text
 +-----------------------------------------------------+
-| SIMPUS-Mini      Beranda | Buku | Anggota | Peminjaman | (Nama Petugas) Logout |
-|-------------------------------------------------------|
-|  [Total Buku]   [Total Anggota]   [Sedang Dipinjam]    |
-|                                                         |
-|  Aksi Cepat:                                           |
-|  [ + Peminjaman Baru ]   [ + Pengembalian ]            |
-|                                                         |
-|  Transaksi Terbaru                                     |
-|  --------------------------------------------------    |
-|  Anggota | Buku | Tgl Pinjam | Status                  |
+|                      Kost Papa                      |
+|-----------------------------------------------------|
+|                                                     |
+|                 [ Login Petugas ]                   |
+|                                                     |
+|   Username : [_________________________]           |
+|   Password : [_________________________]           |
+|                                                     |
+|                 [   Masuk ke Sistem   ]             |
+|                                                     |
+|     Belum punya akun? Registrasi petugas baru       |
 +-----------------------------------------------------+
-Wireframe: Form Peminjaman
-+--------------------------------------+
-|  Form Peminjaman Buku                |
-|--------------------------------------|
-|  Anggota : [ dropdown pilih anggota ]|
-|  Buku    : [ dropdown, hanya stok>0 ]|
-|  Tanggal Pinjam : [ auto: hari ini ] |
-|                                      |
-|          [  Simpan Peminjaman  ]    |
-+--------------------------------------+
-Wireframe: Form Pengembalian
-+--------------------------------------+
-|  Pengembalian Buku                   |
-|--------------------------------------|
-|  Cari transaksi aktif:               |
-|  [ nama anggota / judul buku ______ ]|
-|                                      |
-|  Anggota | Buku | Tgl Pinjam | [Kembalikan] |
-+--------------------------------------+
-Wireframe: Riwayat Peminjaman per Anggota
-+--------------------------------------+
-|  Riwayat Peminjaman — Siti Aminah    |
-|--------------------------------------|
-|  Buku            | Pinjam   | Kembali | Status      |
-|  Laskar Pelangi   | 01/07    | 10/07   | Selesai     |
-|  Bumi Manusia      | 15/07    | -       | Dipinjam    |
-+--------------------------------------+
-Konsistensi dengan Desain yang Sudah Berjalan
-Warna aksen, tipografi navbar, dan gaya tabel/kartu mengikuti assets/css/style.css yang sudah dibangun sejak Jobsheet 2-3.
-Navbar akan ditambah menu Peminjaman dan indikator status login (nama petugas / tombol Logout) mulai implementasi di Jobsheet 10.
-Edge case yang perlu ditangani saat implementasi: buku stok habis tidak boleh dipilih di form peminjaman; anggota dengan tunggakan terlambat divalidasi di Jobsheet 12 (tugas mandiri).
+
++-----------------------------------------------------------------------------------+
+| Kost Papa    Beranda | Kamar | Penghuni                   [👤 Nama Petugas] Logout |
+|-----------------------------------------------------------------------------------|
+|  [ Total Kamar ]         [ Total Penghuni ]         [ Kamar Terisi ]              |
+|                                                                                   |
+|  Tabel Ketersediaan Kamar & Penghuni Terdaftar                                    |
+|  -------------------------------------------------------------------------------  |
+|  No. Kamar | Tipe | Harga / Bulan | Status | Aksi                                 |
++-----------------------------------------------------------------------------------+
+
+### 2. `jobsheet-10/includes/auth.php`
+Guard clause pengaman halaman internal[cite: 27]. Menggunakan penanganan sesi `$_SESSION['user_id']` bawaan dan path absolut agar aman diakses dari subfolder mana pun[cite: 27]:
+
+```php
+<?php
+// Guard clause: di-include di baris paling atas setiap halaman yang
+// membutuhkan login sebelum file lain mengeluarkan output apa pun.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['flash'] = [
+        'type' => 'error',
+        'pesan' => 'Silakan login terlebih dahulu untuk mengakses menu ini.'
+    ];
+    header('Location: /jobsheet-10/auth/login.php');
+    exit;
+}
