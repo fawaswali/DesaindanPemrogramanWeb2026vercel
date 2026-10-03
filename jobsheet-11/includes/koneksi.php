@@ -9,8 +9,8 @@ $port     = getenv('SUPABASE_PORT') ?: $_ENV['SUPABASE_PORT'] ?? '6543';
 // Fallback jika env Vercel tidak terbaca / diuji di lokal
 if (empty($host)) {
     // Isikan langsung data Supabase milikmu di sini jika env kosong:
-    $host     = 'aws-0-ap-northeast-2.pooler.supabase.com"'; // Ganti dengan Host Supabase kamu
-    $user     = 'postgres';
+    $host     = 'aws-0-ap-northeast-2.pooler.supabase.com'; // Ganti dengan Host Supabase kamu
+    $user     = 'postgres.mpycrxqzjfmqqafoxpew';
     $password = 'sg95WPSX2YuRgV91'; // Ganti dengan Password Supabase kamu
     $dbname   = 'postgres';
     $port     = '6543';
