@@ -2,49 +2,42 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require __DIR__ . '/../includes/csrf.php';
-require __DIR__ . '/../includes/koneksi.php';
-
-csrf_verify();
-
-$nama = trim($_POST['nama'] ?? '');
-$username = trim($_POST['username'] ?? '');
-$password = $_POST['password'] ?? '';
-
-$errors = [];
-if ($nama === '') {
-    $errors[] = "Nama wajib diisi.";
-}
-if ($username === '') {
-    $errors[] = "Username wajib diisi.";
-}
-if (strlen($password) < 6) {
-    $errors[] = "Password minimal 6 karakter.";
-}
-
-if (!empty($errors)) {
-    $_SESSION['flash'] = ['type' => 'error', 'pesan' => implode(' ', $errors)];
-    header('Location: register.php');
+if (isset($_SESSION['user_id'])) {
+    header('Location: ../index.php');
     exit;
 }
 
-$cek = $pdo->prepare("SELECT id FROM users WHERE username = :username");
-$cek->execute(['username' => $username]);
-if ($cek->fetch()) {
-    $_SESSION['flash'] = ['type' => 'error', 'pesan' => 'Username sudah digunakan.'];
-    header('Location: register.php');
-    exit;
-}
+$page_title = "Registrasi Petugas";
+include __DIR__ . '/../includes/header.php';
 
-$stmt = $pdo->prepare(
-    "INSERT INTO users (nama, username, password, role) VALUES (:nama, :username, :password, 'petugas')"
-);
-$stmt->execute([
-    'nama' => $nama,
-    'username' => $username,
-    'password' => password_hash($password, PASSWORD_DEFAULT),
-]);
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
+?>
+        <section>
+            <h2>Registrasi Petugas Kost Papa</h2>
 
-$_SESSION['flash'] = ['type' => 'success', 'pesan' => 'Registrasi berhasil, silakan login.'];
-header('Location: login.php');
-exit;
+            <?php if ($flash): ?>
+                <p class="flash flash-<?php echo e($flash['type']); ?>"><?php echo e($flash['pesan']); ?></p>
+            <?php endif; ?>
+
+            <form method="post" action="proses_register.php">
+                <?php echo csrf_field(); ?>
+                <p>
+                    <label for="nama">Nama Lengkap</label><br>
+                    <input type="text" id="nama" name="nama" required>
+                </p>
+                <p>
+                    <label for="username">Username</label><br>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </p>
+                <p>
+                    <label for="password">Password (min. 6 karakter)</label><br>
+                    <input type="password" id="password" name="password" required autocomplete="new-password">
+                </p>
+                <p>
+                    <button type="submit">Daftar</button>
+                </p>
+            </form>
+            <p>Sudah punya akun? <a href="login.php">Login di sini</a></p>
+        </section>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

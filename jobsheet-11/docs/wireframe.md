@@ -1,74 +1,56 @@
-Wireframe & User Flow — SIMPUS-Mini
-Sub-CPMK: Merancang UI/UX aplikasi (proyek).
+# Wireframe & User Flow — Kost Papa
+Sub-CPMK: Merancang UI/UX dan alur keamanan aplikasi web manajemen kost.
 
-Halaman yang sudah ada (Beranda, Daftar/Tambah Buku, Daftar/Tambah Anggota — Jobsheet 1-3) belum mencakup fitur Login, Dashboard Petugas, dan Peminjaman/Pengembalian. Dokumen ini merancang wireframe untuk halaman-halaman tersebut sebelum diimplementasikan mulai Jobsheet 5 dan seterusnya.
+Dokumen ini menjelaskan alur pengguna dan rancangan antarmuka aplikasi **Kost Papa** berbasis peran (*Role-Based Access Control*) antara Tamu/Publik dan Petugas Kost.
 
-Aktor
-Tamu: hanya bisa melihat katalog buku (Beranda, Daftar Buku) tanpa login.
-Petugas: login untuk mengakses seluruh fitur CRUD dan transaksi peminjaman.
-User Flow — Peminjaman Buku
-[Petugas Login] -> [Dashboard] -> [Pilih menu "Peminjaman Baru"]
-        -> [Pilih Anggota] -> [Pilih Buku (stok > 0)]
-        -> [Simpan] -> [Stok buku berkurang 1] -> [Kembali ke Dashboard]
-User Flow — Pengembalian Buku
-[Dashboard] -> [Menu "Pengembalian"] -> [Cari transaksi aktif (anggota/buku)]
-        -> [Tandai "Dikembalikan"] -> [Stok buku bertambah 1]
-        -> [Kembali ke Dashboard]
-Wireframe: Halaman Login
+---
+
+## 👥 Peran Pengguna (Aktor)
+1. **Tamu (Publik):**
+   * Tanpa login.
+   * Hanya dapat mengakses halaman Beranda dan Daftar Katalog Kamar (`kamar/list.php`) tanpa tombol aksi edit/hapus.
+2. **Petugas (Terautentikasi):**
+   * Wajib login melalui form kredensial petugas.
+   * Memiliki hak akses penuh untuk melakukan operasi CRUD pada data Kamar Kost (`kamar_11`) dan data Penghuni (`penghuni_11`).
+
+---
+
+## 🔄 User Flow — Pengelolaan Kamar Kost
+`[Petugas Login]` $\rightarrow$ `[Dashboard]` $\rightarrow$ `[Menu Tambah Kamar]` $\rightarrow$ `[Input Spesifikasi & Harga]` $\rightarrow$ `[Verifikasi Token CSRF]` $\rightarrow$ `[Simpan ke kamar_11]` $\rightarrow$ `[Kembali ke List Kamar]`
+
+## 🔄 User Flow — Check-in Penghuni Baru
+`[Petugas Login]` $\rightarrow$ `[Dashboard]` $\rightarrow$ `[Menu Tambah Penghuni]` $\rightarrow$ `[Input NIK & Data Diri]` $\rightarrow$ `[Pilih Kamar 'Tersedia']` $\rightarrow$ `[Verifikasi Token CSRF]` $\rightarrow$ `[Status Kamar Berubah 'Terisi']` $\rightarrow$ `[Kembali ke List Penghuni]`
+
+---
+
+## 🎨 Wireframe Tampilan
+
+### Wireframe: Halaman Login Petugas
+```text
 +--------------------------------------+
-|              SIMPUS-Mini             |
+|              Kost Papa               |
 |--------------------------------------|
 |                                      |
-|        [ Login Petugas ]            |
+|        [ Login Petugas Kost ]        |
 |                                      |
-|   Username : [______________]       |
-|   Password : [______________]       |
+|   Username : [______________]        |
+|   Password : [______________]        |
 |                                      |
-|          [   Masuk   ]              |
+|          [   Masuk   ]               |
 |                                      |
-|   Belum punya akun? Daftar di sini  |
+|   Belum punya akun? Daftar di sini   |
 +--------------------------------------+
-Wireframe: Dashboard Petugas
+
 +-----------------------------------------------------+
-| SIMPUS-Mini      Beranda | Buku | Anggota | Peminjaman | (Nama Petugas) Logout |
-|-------------------------------------------------------|
-|  [Total Buku]   [Total Anggota]   [Sedang Dipinjam]    |
-|                                                         |
-|  Aksi Cepat:                                           |
-|  [ + Peminjaman Baru ]   [ + Pengembalian ]            |
-|                                                         |
-|  Transaksi Terbaru                                     |
-|  --------------------------------------------------    |
-|  Anggota | Buku | Tgl Pinjam | Status                  |
+| Kost Papa     Beranda | Kamar | Penghuni | (Petugas) Logout |
+|-----------------------------------------------------|
+|  [Total Kamar]   [Kamar Terisi]   [Total Penghuni]  |
+|                                                     |
+|  Aksi Cepat:                                        |
+|  [ + Tambah Kamar ]     [ + Tambah Penghuni ]       |
+|                                                     |
+|  Ringkasan Status Kost                              |
+|  -------------------------------------------------- |
+|  Nomor Kamar | Tipe Kamar | Harga/Bulan | Status    |
 +-----------------------------------------------------+
-Wireframe: Form Peminjaman
-+--------------------------------------+
-|  Form Peminjaman Buku                |
-|--------------------------------------|
-|  Anggota : [ dropdown pilih anggota ]|
-|  Buku    : [ dropdown, hanya stok>0 ]|
-|  Tanggal Pinjam : [ auto: hari ini ] |
-|                                      |
-|          [  Simpan Peminjaman  ]    |
-+--------------------------------------+
-Wireframe: Form Pengembalian
-+--------------------------------------+
-|  Pengembalian Buku                   |
-|--------------------------------------|
-|  Cari transaksi aktif:               |
-|  [ nama anggota / judul buku ______ ]|
-|                                      |
-|  Anggota | Buku | Tgl Pinjam | [Kembalikan] |
-+--------------------------------------+
-Wireframe: Riwayat Peminjaman per Anggota
-+--------------------------------------+
-|  Riwayat Peminjaman — Siti Aminah    |
-|--------------------------------------|
-|  Buku            | Pinjam   | Kembali | Status      |
-|  Laskar Pelangi   | 01/07    | 10/07   | Selesai     |
-|  Bumi Manusia      | 15/07    | -       | Dipinjam    |
-+--------------------------------------+
-Konsistensi dengan Desain yang Sudah Berjalan
-Warna aksen, tipografi navbar, dan gaya tabel/kartu mengikuti assets/css/style.css yang sudah dibangun sejak Jobsheet 2-3.
-Navbar akan ditambah menu Peminjaman dan indikator status login (nama petugas / tombol Logout) mulai implementasi di Jobsheet 10.
-Edge case yang perlu ditangani saat implementasi: buku stok habis tidak boleh dipilih di form peminjaman; anggota dengan tunggakan terlambat divalidasi di Jobsheet 12 (tugas mandiri).
+

@@ -10,11 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 csrf_verify();
 
-$id = $_POST['id'] ?? null;
+$id = (int) ($_POST['id'] ?? 0);
 if ($id) {
-    $stmt = $pdo->prepare("DELETE FROM anggota WHERE id = :id");
+    $stmt = $pdo->prepare("DELETE FROM penghuni_10 WHERE id = :id");
     $stmt->execute(['id' => $id]);
-    $_SESSION['flash'] = ['type' => 'success', 'pesan' => 'Anggota berhasil dihapus.'];
+    $_SESSION['flash'] = ['type' => 'success', 'pesan' => 'Data penghuni berhasil dihapus.'];
 }
 
 header('Location: list.php');

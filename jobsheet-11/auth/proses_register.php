@@ -2,12 +2,13 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require __DIR__ . '/../includes/csrf.php';
-require __DIR__ . '/../includes/koneksi.php';
+require_once __DIR__ . '/../includes/helpers.php';
+require_once __DIR__ . '/../includes/csrf.php';
+require_once __DIR__ . '/../includes/koneksi.php';
 
 csrf_verify();
 
-$nama = trim($_POST['nama'] ?? '');
+$nama     = trim($_POST['nama'] ?? '');
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 
@@ -28,7 +29,8 @@ if (!empty($errors)) {
     exit;
 }
 
-$cek = $pdo->prepare("SELECT id FROM users WHERE username = :username");
+// Cek apakah username sudah terdaftar di users_11
+$cek = $pdo->prepare("SELECT id FROM users_11 WHERE username = :username");
 $cek->execute(['username' => $username]);
 if ($cek->fetch()) {
     $_SESSION['flash'] = ['type' => 'error', 'pesan' => 'Username sudah digunakan.'];
@@ -36,11 +38,12 @@ if ($cek->fetch()) {
     exit;
 }
 
+// Simpan data pengguna baru ke users_11 dengan password terenkripsi
 $stmt = $pdo->prepare(
-    "INSERT INTO users (nama, username, password, role) VALUES (:nama, :username, :password, 'petugas')"
+    "INSERT INTO users_11 (nama, username, password, role) VALUES (:nama, :username, :password, 'petugas')"
 );
 $stmt->execute([
-    'nama' => $nama,
+    'nama'     => $nama,
     'username' => $username,
     'password' => password_hash($password, PASSWORD_DEFAULT),
 ]);

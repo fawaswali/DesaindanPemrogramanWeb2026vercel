@@ -7,33 +7,33 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$page_title = "Login";
+$page_title = "Login Petugas";
 include __DIR__ . '/../includes/header.php';
 
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 ?>
         <section>
-            <h2>Login Petugas</h2>
+            <h2>Login Petugas Kost Papa</h2>
 
             <?php if ($flash): ?>
-                <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
+                <p class="flash flash-<?php echo e($flash['type']); ?>"><?php echo e($flash['pesan']); ?></p>
             <?php endif; ?>
 
             <form method="post" action="proses_login.php">
                 <?php echo csrf_field(); ?>
                 <p>
                     <label for="username">Username</label><br>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" required autocomplete="username">
                 </p>
                 <p>
                     <label for="password">Password</label><br>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
                 </p>
                 <p>
                     <button type="submit">Masuk</button>
                 </p>
             </form>
-            <p>Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+            <p>Belum punya akun petugas? <a href="register.php">Daftar di sini</a></p>
         </section>
 <?php include __DIR__ . '/../includes/footer.php'; ?>

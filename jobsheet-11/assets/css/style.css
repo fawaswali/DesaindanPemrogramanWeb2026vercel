@@ -32,13 +32,15 @@ header {
     flex-wrap: wrap;
 }
 
-header h1 {
+header .logo {
     font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
 }
 
-header nav ul {
-    list-style: none;
+header nav {
     display: flex;
+    align-items: center;
     gap: 1.25rem;
 }
 
@@ -47,16 +49,10 @@ header nav a {
     font-weight: 500;
 }
 
-.auth-status {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+.auth-user {
     color: #fff;
-}
-
-.auth-status a {
-    color: #fff;
-    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 0.5rem;
 }
 
 /* ===== Main Layout ===== */
@@ -80,26 +76,26 @@ section h2 {
 }
 
 /* ===== Kartu Statistik (CSS Grid) ===== */
-main section:nth-of-type(2) {
+main section.stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
-main section:nth-of-type(2) article {
+main section.stats-grid article {
     background-color: #eef4fa;
     border-radius: 8px;
     padding: 1.25rem;
     text-align: center;
 }
 
-main section:nth-of-type(2) article h3 {
+main section.stats-grid article h3 {
     font-size: 0.95rem;
     color: #55677a;
     margin-bottom: 0.5rem;
 }
 
-main section:nth-of-type(2) article p {
+main section.stats-grid article p {
     font-size: 1.8rem;
     font-weight: 700;
     color: #1d5b8a;
@@ -145,7 +141,8 @@ td a.btn-edit {
     color: #fff;
 }
 
-td button:last-of-type {
+td button:last-of-type,
+td button.btn-hapus {
     background-color: #d9534f;
     color: #fff;
 }
@@ -182,21 +179,6 @@ td form.form-hapus {
     border-color: #1d5b8a;
 }
 
-.search-box form {
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-end;
-}
-
-.search-box button {
-    padding: 0.55rem 1.2rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #1d5b8a;
-    color: #fff;
-    cursor: pointer;
-}
-
 /* ===== Form ===== */
 form p {
     margin-bottom: 1rem;
@@ -210,7 +192,8 @@ form label {
 }
 
 form input,
-form select {
+form select,
+form textarea {
     width: 100%;
     max-width: 400px;
     padding: 0.55rem 0.7rem;
@@ -246,7 +229,7 @@ footer {
     overflow-x: auto;
 }
 
-/* ===== Hamburger Menu (JS-driven) ===== */
+/* ===== Hamburger Menu ===== */
 .nav-toggle-label {
     display: none;
     font-size: 1.6rem;
@@ -287,24 +270,36 @@ footer {
     margin-bottom: 1rem;
 }
 
+.search-box form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
 .search-box input {
     width: 100%;
     max-width: 320px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.55rem 0.75rem;
     border: 1px solid #cdd4da;
     border-radius: 4px;
 }
 
-/* ===== Responsive Breakpoints ===== */
+.search-box button {
+    padding: 0.55rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #1d5b8a;
+    color: #fff;
+    cursor: pointer;
+}
 
-/* Tablet ke bawah */
+/* ===== Responsive Breakpoints ===== */
 @media (max-width: 768px) {
-    main section:nth-of-type(2) {
+    main section.stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
     header {
         position: relative;
@@ -317,25 +312,23 @@ footer {
     header nav {
         display: none;
         width: 100%;
-        order: 3;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
         margin-top: 1rem;
     }
 
     header nav.nav-open {
-        display: block;
+        display: flex;
     }
 
-    header nav ul {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    main section:nth-of-type(2) {
+    main section.stats-grid {
         grid-template-columns: 1fr;
     }
 
     form input,
-    form select {
+    form select,
+    form textarea {
         max-width: 100%;
     }
 }
