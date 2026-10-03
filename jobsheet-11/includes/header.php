@@ -33,12 +33,16 @@ $base = $__rel === '' ? '' : str_repeat('../', substr_count($__rel, '/') + 1);
                 <a href="<?php echo $base; ?>kamar/tambah.php">Tambah Kamar</a>
                 <a href="<?php echo $base; ?>penghuni/list.php">Daftar Penghuni</a>
                 <a href="<?php echo $base; ?>penghuni/tambah.php">Tambah Penghuni</a>
-                <span class="auth-user">Halo, <?php echo e($namaUser); ?></span>
+            <?php endif; ?>
+        </nav>
+        <div class="auth-status">
+            <?php if ($sudahLogin): ?>
+                <span>Halo, <?php echo e($namaUser); ?></span>
                 <a href="<?php echo $base; ?>auth/logout.php">Logout</a>
             <?php else: ?>
                 <a href="<?php echo $base; ?>auth/login.php">Login Petugas</a>
                 <a href="<?php echo $base; ?>auth/register.php">Registrasi</a>
             <?php endif; ?>
-        </nav>
+        </div>
     </header>
     <main>
