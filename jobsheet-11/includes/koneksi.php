@@ -6,8 +6,11 @@ $user = getenv('SUPABASE_USER') ?: "postgres.mpycrxqzjfmqqafoxpew";
 $pass = getenv('SUPABASE_PASS') ?: "sg95WPSX2YuRgV91"; 
 
 try {
-    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $dsn = "pgsql:host={$host};port={$port};dbname={$dbname};";
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 } catch (PDOException $e) {
     die("Koneksi database gagal: " . $e->getMessage());
 }
