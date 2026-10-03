@@ -23,7 +23,7 @@ unset($_SESSION['flash']);
             <p>Platform pengelolaan data kamar, ketersediaan unit, dan pencatatan penghuni kost secara terpusat dan aman.</p>
         </section>
 
-        <section class="stats-grid">
+        <section>
             <article>
                 <h3>Total Unit Kamar</h3>
                 <p><?php echo $totalKamar; ?></p>
